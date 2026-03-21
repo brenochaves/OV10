@@ -1,0 +1,59 @@
+mode: development
+current_focus: consume governed market and FX snapshots in valuation reconciliation
+risk_posture: conservative
+release_pressure: unknown
+allow_broad_refactors: false
+specialist_team_enabled: true
+context_rotation_enabled: true
+priority_engine_enabled: true
+watchdog_expected: true
+repository_sync_audit_expected: true
+notes:
+  - Preserve superior OV10 material in docs/adr, docs/diagnostics, and docs/operations.
+  - Treat .codex as an autonomy control plane, not as a replacement for repository truth.
+  - Prefer additive and reversible changes.
+  - Selective final_kit adoption was completed on 2026-03-12 and is documented in ADR 0007.
+  - Workbook-based config loading with TOML fallback was completed on 2026-03-12 and is documented in ADR 0008.
+  - >-
+    Remote Apps Script payload capture and first function catalog were completed
+    on 2026-03-12; use that evidence before inferring spreadsheet behavior from
+    the offline export.
+  - >-
+    Corporate action cash broker attribution was improved on 2026-03-12; the
+    current fixture no longer uses the system account for the single cash-bearing
+    event.
+  - >-
+    Reference workbook reconciliation was formalized on 2026-03-19; use
+    `reference-workbook-reconciliation` before claiming parity with `portfolio.`,
+    `caixa`, `alocação`, or `rendimentos`.
+  - >-
+    Instrument identity normalization was completed on 2026-03-19; use
+    `instrument-reference-report` as the canonical inspection path for aliases
+    and normalized instrument identity.
+  - >-
+    CI validation was added on 2026-03-21; keep local and CI quality commands
+    aligned with `docs/operations/SETUP_AND_USAGE.md`.
+  - >-
+    Governed market and FX snapshot refresh/report paths were added on
+    2026-03-21 with `brapi` and BCB PTAX adapters; bulk `brapi` refresh is
+    token-ready through `--brapi-token` / `OV10_BRAPI_TOKEN`.
+  - >-
+    Governed multi-stack static analysis was expanded on 2026-03-21 to cover
+    active Apps Script, Markdown, YAML, shell, and PowerShell surfaces in
+    addition to the Python baseline.
+  - >-
+    Python type checking, explicit TOML/JSON validation, governed SQL lint,
+    dependency auditing, and local `pre-commit` orchestration were added on
+    2026-03-21 to keep the active OV10 surface aligned across operator path,
+    VS Code tasks, and CI.
+  - >-
+    Git checkpoint and remote-sync governance were added on 2026-03-21 after
+    diagnosing that the repository had only one historical commit and a large
+    active untracked surface; use the repository audit scripts before ending
+    long work sessions or enabling unattended continuation.
+  - >-
+    Security hardening of the dev bridge and broader repo posture was
+    explicitly deferred on 2026-03-21 until after a clean functional MVP and
+    the planned backlog are substantially complete; keep security findings
+    visible, but do not let them preempt the current delivery path unless risk
+    materially changes.

@@ -1,0 +1,23 @@
+You are in integration_analysis mode.
+
+Read and obey:
+- `.codex/SYSTEM_STATE.yaml`
+- `.codex/AGENTS.md`
+- `.codex/OPERATING_MODEL.md`
+- `.codex/ARCHITECTURE_GUARDRAILS.md`
+- `.codex/QUALITY_GATES.md`
+
+Task:
+Analyze the current repository and determine how this kit should be adapted without damaging existing professional decisions.
+
+Required outputs:
+1. fill `.codex/INTEGRATION_REPORT.md`
+2. update `.codex/CONTEXT.md` with observed repository facts
+3. record important existing conventions in `.codex/DECISIONS.md` only when they are clear and meaningful
+4. leave implementation changes out unless absolutely required for adaptation safety
+
+Rules:
+- preserve current project patterns by default
+- do not invent architecture
+- do not start broad refactors
+- separate facts, assumptions, and open questions clearly

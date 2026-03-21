@@ -1,0 +1,23 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.debugpy",
+    "charliermarsh.ruff",
+    "dbaeumer.vscode-eslint",
+    "ms-vscode.powershell",
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml",
+    "timonwong.shellcheck",
+    "editorconfig.editorconfig",
+    "usernamehw.errorlens",
+    "eamodio.gitlens",
+    "streetsidesoftware.code-spell-checker",
+    "yzhang.markdown-all-in-one",
+    "DavidAnson.vscode-markdownlint"
+  ],
+  "unwantedRecommendations": [
+    "github.copilot",
+    "github.copilot-chat"
+  ]
+}

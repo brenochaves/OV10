@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ov10"
+version = "0.1.0"
+description = "Personal portfolio accounting foundation for OV10"
+requires-python = ">=3.12"
+dependencies = [
+  "openpyxl>=3.1,<4",
+  "pandas>=2.2,<3",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pip-audit>=2.9,<3",
+  "pre-commit>=4.3,<5",
+  "pytest>=8.3,<9",
+  "ruff>=0.11,<0.12",
+  "sqlfluff>=3.4,<4",
+  "yamllint>=1.37,<2",
+]
+
+[project.scripts]
+ov10 = "ov10.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+force-exclude = true
+extend-exclude = [
+  "archive/",
+  "main.py",
+  "leitor_planilha.py",
+  "consolidar_posicao.py",
+  "exportador.py",
+]
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "I", "UP"]

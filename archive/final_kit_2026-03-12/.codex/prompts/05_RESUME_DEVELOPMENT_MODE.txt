@@ -1,0 +1,8 @@
+Set mode to `development` if appropriate.
+
+Read and obey all canonical `.codex/` files.
+
+Focus:
+- resume normal backlog execution
+- preserve current architecture and release constraints
+- continue autonomously while executable tasks remain

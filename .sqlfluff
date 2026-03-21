@@ -1,0 +1,9 @@
+[sqlfluff]
+dialect = sqlite
+templater = raw
+sql_file_exts = .sql
+max_line_length = 100
+exclude_rules = LT13
+
+[sqlfluff:indentation]
+tab_space_size = 4

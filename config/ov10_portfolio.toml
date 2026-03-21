@@ -1,0 +1,60 @@
+[metadata]
+config_version = 1
+default_portfolio_id = "core"
+
+[[portfolios]]
+portfolio_id = "core"
+name = "Core Portfolio"
+short_name = "core"
+profile = "custom"
+is_active = true
+
+[[books]]
+book_id = "renda_fixa"
+portfolio_id = "core"
+name = "Renda Fixa"
+target_weight = 0.0
+instrument_types = ["fund_br", "treasury_br"]
+is_active = true
+sort_order = 10
+
+[[books]]
+book_id = "renda_variavel_br"
+portfolio_id = "core"
+name = "Renda Variavel Brasil"
+target_weight = 0.0
+instrument_types = ["stock_br", "bdr", "etf_br", "fii"]
+is_active = true
+sort_order = 20
+
+[[books]]
+book_id = "internacional"
+portfolio_id = "core"
+name = "Internacional"
+target_weight = 0.0
+instrument_types = ["stock_us", "etf_us"]
+is_active = true
+sort_order = 30
+
+[[books]]
+book_id = "criptos"
+portfolio_id = "core"
+name = "Criptos"
+target_weight = 0.0
+instrument_types = ["crypto"]
+is_active = true
+sort_order = 40
+
+[[books]]
+book_id = "outros"
+portfolio_id = "core"
+name = "Outros"
+target_weight = 0.0
+instrument_types = ["unknown"]
+is_active = true
+sort_order = 99
+
+[[account_assignments]]
+rule_id = "all_accounts_to_core"
+portfolio_id = "core"
+account_patterns = ["*"]

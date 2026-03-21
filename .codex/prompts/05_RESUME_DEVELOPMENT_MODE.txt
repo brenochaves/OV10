@@ -1,0 +1,13 @@
+Resume OV10 development mode.
+
+Before making changes:
+- read `.codex/CONTEXT.md`
+- read `.codex/BACKLOG.md`
+- read `.codex/TASK_GRAPH.md`
+- confirm the relevant ADRs in `docs/adr/`
+
+Then:
+1. choose the highest-priority executable task
+2. make the minimum correct change
+3. run the smallest trustworthy validation set
+4. update `.codex/DECISIONS.md`, `.codex/CONTEXT.md`, and operator docs if behavior changed

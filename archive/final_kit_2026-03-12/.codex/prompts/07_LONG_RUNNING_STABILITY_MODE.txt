@@ -1,0 +1,9 @@
+Prepare the repository for long-running autonomous sessions.
+
+Actions:
+1. confirm `.codex/memory/context_summary.md` is concise and current
+2. confirm `.codex/memory/context_snapshot.md` is current enough for restart
+3. ensure backlog tasks are small and grounded
+4. prefer local blockage handling over unnecessary hard stops
+5. use `scripts/context_rotator.py` and `scripts/task_priority_engine.py` as support tools when appropriate
+6. update logs and memory before any planned session restart

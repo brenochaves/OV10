@@ -1,0 +1,18 @@
+OPERATOR RUNBOOK
+
+Recommended sequence:
+1. Copy the kit into the repository root.
+2. Ask Codex to run `.codex/prompts/01_ANALYZE_INTEGRATION.txt`.
+3. Review `.codex/INTEGRATION_REPORT.md`.
+4. Ask Codex to run `.codex/prompts/02_BUILD_PROJECT_MEMORY.txt`.
+5. Review and refine memory files if needed.
+6. Seed `.codex/BACKLOG.md` with real tasks.
+7. Ask Codex to run `.codex/prompts/03_START_AUTONOMOUS_MODE.txt`.
+8. Optionally enable specialists with `.codex/prompts/06_ENABLE_SPECIALIST_TEAM.txt`.
+9. Configure tunnel supervision using `docs/VS_CODE_TUNNEL_SETUP.txt`.
+
+When intervening remotely:
+- update backlog priorities explicitly
+- mark impossible tasks BLOCKED with evidence
+- keep decisions in `.codex/DECISIONS.md`
+- keep `.codex/memory/context_summary.md` short and current

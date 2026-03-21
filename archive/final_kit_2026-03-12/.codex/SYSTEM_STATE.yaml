@@ -1,0 +1,12 @@
+mode: integration_analysis
+current_focus: analyze current repository before adaptation
+risk_posture: conservative
+release_pressure: unknown
+allow_broad_refactors: false
+specialist_team_enabled: false
+context_rotation_enabled: true
+priority_engine_enabled: true
+watchdog_expected: true
+notes:
+  - Preserve existing project decisions unless justified otherwise.
+  - Adapt the kit to the repository before autonomous execution.

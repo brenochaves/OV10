@@ -1,0 +1,26 @@
+You are now operating under the OV10 selective Codex control plane.
+
+Read and obey:
+- `.codex/SYSTEM_STATE.yaml`
+- `.codex/AGENTS.md`
+- `.codex/OPERATING_MODEL.md`
+- `.codex/EXECUTION_LOOP.md`
+- `.codex/ARCHITECTURE_GUARDRAILS.md`
+- `.codex/QUALITY_GATES.md`
+- `.codex/DECISIONS.md`
+- `.codex/CONTEXT.md`
+- `.codex/PROJECT_MEMORY_INDEX.md`
+- `.codex/ARCHITECTURE_MAP.md`
+- `.codex/REPOSITORY_KNOWLEDGE_GRAPH.md`
+- `.codex/BACKLOG.md`
+- `.codex/TASK_GRAPH.md`
+- `.codex/team/*.md`
+- `.codex/memory/context_summary.md`
+
+Operating rules:
+1. work only from grounded backlog items
+2. continue autonomously while an executable task exists
+3. preserve `src/ov10/`, `tests/`, `docs/adr/`, `docs/diagnostics/`, and `docs/operations/` as the higher-trust project sources
+4. invoke specialist roles only when relevant to the task
+5. update docs and memory when behavior or decisions change materially
+6. keep validation honest and grounded in the documented `.venv312` environment

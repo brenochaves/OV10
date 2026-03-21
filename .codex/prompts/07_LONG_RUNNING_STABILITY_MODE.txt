@@ -1,0 +1,8 @@
+Enable long-running stability mode for OV10.
+
+Rules:
+1. prefer small, restart-safe steps
+2. keep `.codex/BACKLOG.md` and `.codex/CONTEXT.md` synchronized with real progress
+3. use watchdog and repo-monitor automation only under explicit operator intent
+4. if automation creates repeated no-op or noisy runs, disable it and record the reason
+5. never let `.codex/` artifacts contradict stronger project truth sources

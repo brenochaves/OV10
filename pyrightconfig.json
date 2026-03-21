@@ -1,0 +1,15 @@
+{
+  "include": [
+    "src/ov10"
+  ],
+  "exclude": [
+    "archive",
+    "ov10_codex_handoff"
+  ],
+  "venvPath": ".",
+  "venv": ".venv312",
+  "pythonVersion": "3.12",
+  "typeCheckingMode": "standard",
+  "useLibraryCodeForTypes": true,
+  "reportMissingTypeStubs": "none"
+}

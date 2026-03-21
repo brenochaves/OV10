@@ -1,0 +1,8 @@
+Set mode to `uat` if not already set.
+
+Read and obey all canonical `.codex/` files.
+
+Focus:
+- work only on issues directly relevant to UAT findings, release readiness, operator docs, and contained regressions
+- avoid broad refactors and optional architecture changes
+- keep changes minimal, auditable, and reversible

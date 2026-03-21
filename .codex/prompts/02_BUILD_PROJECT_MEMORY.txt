@@ -1,0 +1,25 @@
+You are in `memory_build` mode for OV10.
+
+Read and obey:
+- `.codex/SYSTEM_STATE.yaml`
+- `.codex/AGENTS.md`
+- `.codex/CONTEXT.md`
+- `.codex/PROJECT_MEMORY_INDEX.md`
+- `.codex/ARCHITECTURE_MAP.md`
+- `.codex/REPOSITORY_KNOWLEDGE_GRAPH.md`
+- `.codex/INTEGRATION_REPORT.md`
+
+Task:
+Refresh durable project memory from repository evidence.
+
+Required outputs:
+1. update `.codex/PROJECT_MEMORY_INDEX.md`
+2. update `.codex/ARCHITECTURE_MAP.md`
+3. update `.codex/REPOSITORY_KNOWLEDGE_GRAPH.md`
+4. update `.codex/memory/context_summary.md`
+5. add a concise activity log entry if memory changed materially
+
+Rules:
+- facts only
+- note uncertainties explicitly
+- do not replace stronger project sources with generic kit wording

@@ -1,0 +1,20 @@
+Enable the OV10 specialist team when the task benefits from focused review.
+
+Primary specialists:
+- `.codex/team/planner.md`
+- `.codex/team/architecture_specialist.md`
+- `.codex/team/reviewer.md`
+- `.codex/team/test_generator.md`
+- `.codex/team/documentation_steward.md`
+
+Domain specialists:
+- `.codex/team/spreadsheet_researcher.md`
+- `.codex/team/apps_script_researcher.md`
+- `.codex/team/reconciliation_specialist.md`
+- `.codex/team/fiscal_modeler.md`
+- `.codex/team/synthetic_data_steward.md`
+
+Rules:
+- use only the specialists relevant to the current task
+- keep outputs grounded in observable repository or source evidence
+- do not invent domain rules to satisfy a template

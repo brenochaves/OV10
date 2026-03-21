@@ -1,0 +1,16 @@
+MERGE RATIONALE
+
+This merged kit intentionally combines:
+- canonical `.codex/` structure
+- project memory files
+- backlog + task graph + activity log
+- specialist-team model
+- long-running stability support
+- operator-focused tunnel supervision guidance
+
+Conflict policy used in the merge:
+1. preserve repository-first / conservative adaptation behavior
+2. prefer a single canonical source of truth under `.codex/`
+3. keep compatibility files only when they reduce migration friction
+4. avoid domain-specific assumptions
+5. prefer explicit local-block handling over frequent global stops

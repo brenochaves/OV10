@@ -1,0 +1,20 @@
+{
+  "OV10 Pytest Case": {
+    "scope": "python",
+    "prefix": "ov10test",
+    "body": [
+      "def test_${1:behavior}():",
+      "    ${2:assert True}"
+    ],
+    "description": "Minimal pytest skeleton for OV10"
+  },
+  "OV10 Main Guard": {
+    "scope": "python",
+    "prefix": "ov10main",
+    "body": [
+      "if __name__ == \"__main__\":",
+      "    raise SystemExit(main())"
+    ],
+    "description": "Standard main guard for OV10 modules"
+  }
+}

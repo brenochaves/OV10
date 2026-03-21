@@ -1,0 +1,274 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "OV10: Pytest",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv312\\Scripts\\python.exe",
+      "args": [
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: Ruff Check",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv312\\Scripts\\python.exe",
+      "args": [
+        "-m",
+        "ruff",
+        "check",
+        "."
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: Ruff Format",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv312\\Scripts\\python.exe",
+      "args": [
+        "-m",
+        "ruff",
+        "format",
+        "."
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: CLI Help",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv312\\Scripts\\python.exe",
+      "args": [
+        "-m",
+        "ov10.cli",
+        "--help"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: ESLint Apps Script",
+      "type": "shell",
+      "command": "npm",
+      "args": [
+        "run",
+        "lint:apps-script"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: Markdownlint",
+      "type": "shell",
+      "command": "npm",
+      "args": [
+        "run",
+        "lint:markdown"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: Pyright",
+      "type": "shell",
+      "command": "npm",
+      "args": [
+        "run",
+        "typecheck:python"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: YamlLint",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv312\\Scripts\\python.exe",
+      "args": [
+        "-m",
+        "yamllint",
+        ".github/workflows/ci.yml",
+        ".codex/SYSTEM_STATE.yaml"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: SQLFluff",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv312\\Scripts\\python.exe",
+      "args": [
+        "-m",
+        "sqlfluff",
+        "lint",
+        "sql"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: Pip Audit",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv312\\Scripts\\python.exe",
+      "args": [
+        "-m",
+        "pip_audit",
+        "--progress-spinner",
+        "off",
+        "--skip-editable"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: NPM Audit",
+      "type": "shell",
+      "command": "npm",
+      "args": [
+        "run",
+        "audit:node"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: Actionlint",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-Command",
+        "& (Get-ChildItem $env:LOCALAPPDATA\\Microsoft\\WinGet\\Packages -Recurse -Filter actionlint.exe | Select-Object -First 1 -ExpandProperty FullName)"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: ShellCheck",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-Command",
+        "& (Get-ChildItem $env:LOCALAPPDATA\\Microsoft\\WinGet\\Packages -Recurse -Filter shellcheck.exe | Select-Object -First 1 -ExpandProperty FullName) '.codex/scripts/watchdog_loop.sh'"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: PSScriptAnalyzer",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-Command",
+        "Invoke-ScriptAnalyzer -Path '.codex/scripts/*.ps1' -Settings 'PSScriptAnalyzerSettings.psd1' -EnableExit"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: Git Sync Audit",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv312\\Scripts\\python.exe",
+      "args": [
+        ".codex/scripts/git_sync_audit.py",
+        "--fail-on",
+        "warning"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: Register Git Sync Audit Task",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-File",
+        ".codex/scripts/register_git_sync_audit_task.ps1"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: Static Analysis",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "OV10: YamlLint",
+        "OV10: Actionlint",
+        "OV10: Pyright",
+        "OV10: ESLint Apps Script",
+        "OV10: Markdownlint",
+        "OV10: ShellCheck",
+        "OV10: PSScriptAnalyzer",
+        "OV10: SQLFluff"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: Dependency Audit",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "OV10: Pip Audit",
+        "OV10: NPM Audit"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "OV10: Pre-commit All Files",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv312\\Scripts\\python.exe",
+      "args": [
+        "-m",
+        "pre_commit",
+        "run",
+        "--all-files"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+You are now operating under Codex Autonomous Engineering Kit v6 Final.
+
+Read and obey:
+- `.codex/SYSTEM_STATE.yaml`
+- `.codex/AGENTS.md`
+- `.codex/OPERATING_MODEL.md`
+- `.codex/EXECUTION_LOOP.md`
+- `.codex/ARCHITECTURE_GUARDRAILS.md`
+- `.codex/QUALITY_GATES.md`
+- `.codex/DECISIONS.md`
+- `.codex/CONTEXT.md`
+- `.codex/PROJECT_MEMORY_INDEX.md`
+- `.codex/ARCHITECTURE_MAP.md`
+- `.codex/REPOSITORY_KNOWLEDGE_GRAPH.md`
+- `.codex/BACKLOG.md`
+- `.codex/TASK_GRAPH.md`
+- `.codex/team/*.md`
+- `.codex/memory/context_summary.md`
+
+Operating rules:
+1. work only from grounded backlog items
+2. continue autonomously while an executable task exists
+3. if a task is locally blocked, mark it `BLOCKED`, record evidence, and continue
+4. enter `hard_stop` only for systemic or high-risk conditions defined by the kit
+5. prefer the minimum correct change
+6. preserve existing project decisions unless a documented reason supports change
+7. invoke specialist roles only when relevant
+8. update memory, decisions, context, and activity log as needed
+9. do not invent requirements or domain rules

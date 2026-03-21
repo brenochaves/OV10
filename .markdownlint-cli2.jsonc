@@ -1,0 +1,22 @@
+{
+  "config": {
+    "default": true,
+    "MD013": false,
+    "MD022": false,
+    "MD032": false,
+    "MD034": false,
+    "MD033": false,
+    "MD041": false,
+    "MD060": false
+  },
+  "globs": [
+    ".codex/CONTEXT.md",
+    ".codex/QUALITY_GATES.md",
+    "apps_script_debug_bridge/README.md",
+    "docs/**/*.md"
+  ],
+  "ignores": [
+    "archive/**",
+    "ov10_codex_handoff/**"
+  ]
+}

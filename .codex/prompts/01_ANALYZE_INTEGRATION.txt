@@ -1,0 +1,23 @@
+You are in `integration_analysis` mode for OV10.
+
+Read and obey:
+- `.codex/SYSTEM_STATE.yaml`
+- `.codex/AGENTS.md`
+- `.codex/OPERATING_MODEL.md`
+- `.codex/ARCHITECTURE_GUARDRAILS.md`
+- `.codex/QUALITY_GATES.md`
+
+Task:
+Inspect the current OV10 repository and determine how autonomy scaffolding should be adapted without damaging the stronger existing code, tests, ADRs, diagnostics, and runbook.
+
+Required outputs:
+1. update `.codex/INTEGRATION_REPORT.md`
+2. update `.codex/CONTEXT.md`
+3. update `.codex/DECISIONS.md` when a real engineering decision is made
+4. log meaningful activity in `.codex/AGENT_ACTIVITY_LOG.jsonl`
+
+Rules:
+- repository evidence wins over kit templates
+- preserve current architectural decisions unless new evidence justifies change
+- do not turn placeholders into fake authority
+- prefer selective adoption over broad copying

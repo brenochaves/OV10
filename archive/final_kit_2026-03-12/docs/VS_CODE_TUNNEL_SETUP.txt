@@ -1,0 +1,70 @@
+VS CODE TUNNEL + WEB/SMARTPHONE SUPERVISION GUIDE
+
+Objective
+- Allow repository supervision from browser or smartphone.
+- Let the operator inspect files, edit backlog/docs, and unblock Codex remotely.
+
+PART 1 - PREREQUISITES
+
+On the main computer:
+- VS Code installed
+- signed in with a Microsoft account or GitHub account
+- repository open in VS Code
+- computer kept powered on during the session
+
+On the smartphone:
+- modern browser
+- same account available for sign-in
+
+PART 2 - SIMPLE UI METHOD
+
+On the computer:
+1. Open VS Code.
+2. Open the target repository.
+3. Open the account menu or Command Palette.
+4. Run: Remote Tunnels: Turn on Remote Tunnel Access
+5. Sign in if requested.
+6. Save the generated tunnel link.
+
+On the smartphone:
+1. Open the tunnel link in the browser.
+2. Sign in with the same account.
+3. Open the workspace.
+4. Use it to inspect files, edit backlog/docs, and send new instructions.
+
+PART 3 - CLI METHOD
+
+Use a terminal on the main computer:
+- `code tunnel`
+- `code tunnel --help`
+- `code tunnel --no-sleep`
+- `code tunnel service install`
+- `code tunnel service uninstall`
+- `code tunnel unregister`
+
+Recommended flow:
+1. Start tunnel.
+2. Confirm the link works from another device.
+3. Bookmark the link on the smartphone.
+4. Keep Codex and the repository open on the main computer.
+
+PART 4 - WHAT YOU CAN DO FROM THE PHONE
+
+You can:
+- inspect files
+- update backlog and memory files
+- review logs
+- paste prompts
+- unblock local task issues
+- restart a conservative execution flow
+
+Practical limitations:
+- the browser experience is lighter than desktop
+- small screens are poor for long editing sessions
+- some extension-dependent interactions are less comfortable than desktop
+
+PART 5 - OPERATING ADVICE
+
+- Test the tunnel before depending on it.
+- Keep instructions short and precise when using the phone.
+- Prefer editing backlog / context / decision files rather than issuing vague chat guidance.

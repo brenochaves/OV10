@@ -1,0 +1,22 @@
+{
+  "name": "ov10-static-analysis",
+  "private": true,
+  "description": "Static analysis tooling for the governed OV10 non-Python surface",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "lint:apps-script": "eslint apps_script_debug_bridge/DebugBridge.gs",
+    "lint:markdown": "markdownlint-cli2",
+    "lint:node": "npm run lint:apps-script && npm run lint:markdown",
+    "typecheck:python": "pyright",
+    "audit:node": "npm audit --audit-level=moderate"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.24.0",
+    "eslint": "^9.24.0",
+    "globals": "^16.0.0",
+    "markdownlint-cli2": "^0.21.0",
+    "pyright": "^1.1.407"
+  }
+}

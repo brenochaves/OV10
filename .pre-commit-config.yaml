@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ov10-governed-quality-checks
+        name: OV10 governed quality checks
+        entry: python .codex/scripts/run_precommit_checks.py
+        language: system
+        pass_filenames: false
+        require_serial: true

@@ -1,0 +1,16 @@
+Enable specialist-team behavior conservatively.
+
+Actions:
+1. set `.codex/SYSTEM_STATE.yaml` field `specialist_team_enabled` to true
+2. read all files under `.codex/team/`
+3. update `.codex/CONTEXT.md` with rules for when each specialist should be invoked
+4. do not change repository code merely because specialists exist
+
+Specialist invocation policy:
+- use architecture specialist only for cross-cutting structural decisions
+- use security specialist for trust-boundary sensitive work
+- use performance specialist for measured hotspots or explicit performance tasks
+- use bug hunter for root-cause isolation
+- use test generator for regression protection
+- use documentation steward when behavior or operation changes
+- use refactor steward only after stabilization pressure allows cleanup
