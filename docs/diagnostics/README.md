@@ -26,6 +26,7 @@ This folder stores the Phase 0-A deliverables required by the handoff:
 - `2026-03-19_instrument_reference_layer.md`
 - `2026-03-21_market_fx_snapshot_layer.md`
 - `2026-04-05_market_fx_valuation_reconciliation.md`
+- `2026-04-05_fiscal_contracts.md`
 
 Related operational doc:
 

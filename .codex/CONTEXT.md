@@ -28,6 +28,7 @@ Date: 2026-04-05
 - inspect canonical instrument identity through `instrument-reference-report`
 - refresh and inspect governed market and FX snapshots through dedicated CLI paths
 - consume persisted market and FX snapshots inside valuation-aware reference reconciliation when a database is supplied
+- inspect first-pass fiscal output contracts for `darf` and `dirpf` through a governed CLI report
 - run the governed quality stack locally and in CI, including type checking, config validation, SQL lint, dependency audit, and `pre-commit`
 - run a governed Git sync audit and scheduled reminder path for repository checkpoint hygiene
 
@@ -46,7 +47,7 @@ Date: 2026-04-05
 2. adopt the useful parts of `final_kit` as a control plane under `.codex/`
 3. keep autonomy grounded in real backlog items and validation evidence
 4. continue toward deeper parity after the first workbook-config adapter for `config.carteiras` and `config.books`
-5. define first canonical tax output contracts aligned with `darf` and `dirpf`
+5. keep the online/offline workbook compatibility boundary explicit in runtime-facing work
 6. defer nonessential security hardening until after the planned functional MVP is cleanly delivered
 
 ## Current Limitations
@@ -55,7 +56,7 @@ Date: 2026-04-05
 - the offline `.xlsx` reference is not an authoritative runtime equivalent of the online Google Sheets system
 - synthetic workbook generation exists for the current ingestion contract, but scenario breadth is still intentionally small
 - reconciliation is still import-focused, not yet full reference-output parity
-- fiscal outputs such as `darf` and `dirpf` are not implemented
+- fiscal outputs now have first-pass contracts and coverage reporting, but not a full tax engine
 - bulk `brapi` refresh is not reliable without a configured token even though the adapter is implemented
 - valuation-aware reconciliation now depends on actual snapshot coverage in the selected database; an empty or stale database will correctly keep market fields as blockers
 - dev-bridge and broader repo security hardening are intentionally deferred to a post-MVP phase unless the risk posture changes materially

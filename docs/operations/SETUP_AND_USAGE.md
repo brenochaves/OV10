@@ -200,6 +200,12 @@ Run the same harness with persisted market/FX consumption enabled:
 .\.venv312\Scripts\python.exe -m ov10.cli reference-workbook-reconciliation data\OV10_base_2025.xlsx --reference-workbook "ov10_codex_handoff\Cópia de v6.4_Controle de Investimentos (Alpha).xlsx" --config config\ov10_portfolio.toml --database var\ov10.sqlite3
 ```
 
+Inspect the first governed DARF/DIRPF contract report:
+
+```powershell
+.\.venv312\Scripts\python.exe -m ov10.cli fiscal-contract-report data\OV10_base_2025.xlsx
+```
+
 Generate one synthetic workbook for a named scenario:
 
 ```powershell
@@ -637,6 +643,7 @@ Behavior:
 - reconciliation exists but is still basic and focused on import-quality checks
 - broker-level cash ledger and a first repo-versioned portfolio/book config now exist
 - a governed reference workbook reconciliation harness now exists, but it is still selective and not a full live Google Sheets parity engine
+- the first fiscal layer now exists only as contract and coverage reporting; DARF/DIRPF calculations are still intentionally partial
 - allocation is still conservative and based on instrument-type routing, not yet on a full spreadsheet-config import
 - synthetic scenario generation currently targets the Status Invest style ingestion workbook, not the full reference workbook surface
 - `.codex` automation is available, but the repo monitor and watchdog loops are intentionally operator-controlled because they can produce noisy autonomous runs

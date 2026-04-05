@@ -97,7 +97,7 @@ dependencies: TASK-106
 notes: Delivered on 2026-03-21 with ESLint for Apps Script, markdownlint-cli2 for active documentation, YamlLint plus Actionlint for workflow/config YAML, ShellCheck for the Unix watchdog, and PSScriptAnalyzer for the PowerShell watchdog. The governed scope remains intentionally narrower than full repo-wide linting for archived and legacy material.
 
 ## TASK-105
-status: TODO
+status: DONE
 priority: P2
 type: fiscal
 summary: Define canonical contracts for tax outputs aligned with `darf` and `dirpf`.
@@ -107,7 +107,7 @@ acceptance:
 - backlog follow-ups identify missing source data and rule dependencies
 
 dependencies: TASK-103
-notes: Keep this contract-first; do not promise full tax calculation in the first pass.
+notes: Delivered on 2026-04-05 with an explicit fiscal module, workbook-aligned DARF/DIRPF contracts, a `fiscal-contract-report` CLI, and declared dependency gaps for tax lots, fiscal code mapping, prior-year snapshots, and manual fiscal inputs. Full tax calculation remains intentionally out of scope for this first pass.
 
 ## TASK-106
 status: DONE

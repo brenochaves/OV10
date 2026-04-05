@@ -1,5 +1,5 @@
 mode: development
-current_focus: define first canonical tax output contracts aligned with darf and dirpf
+current_focus: establish the explicit online/offline compatibility boundary for the reference workbook
 risk_posture: conservative
 release_pressure: unknown
 allow_broad_refactors: false
@@ -62,3 +62,7 @@ notes:
     reconciliation path on 2026-04-05; market-driven blockers in `portfolio.`
     and `alocação` now reflect actual database coverage instead of placeholder
     gaps.
+  - >-
+    The first fiscal contract layer for `darf` and `dirpf` was added on
+    2026-04-05; treat it as a contract-and-coverage layer, not as a complete
+    tax engine.

@@ -9,6 +9,7 @@ from decimal import Decimal
 from enum import Enum
 from pathlib import Path
 
+from ov10.fiscal import generate_fiscal_contract_report
 from ov10.ingestion import load_status_invest_workbook
 from ov10.market import DEFAULT_FX_BASE_CURRENCIES, refresh_public_market_data
 from ov10.positions import POSITION_ENGINE_VERSION, compute_positions
@@ -262,6 +263,14 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
     )
 
+    fiscal_contract_parser = subparsers.add_parser("fiscal-contract-report")
+    fiscal_contract_parser.add_argument(
+        "path",
+        type=Path,
+        nargs="?",
+        default=DEFAULT_SOURCE_WORKBOOK_PATH,
+    )
+
     return parser
 
 
@@ -455,6 +464,11 @@ def main(argv: list[str] | None = None) -> int:
             config_path=args.config,
             database_path=args.database,
         )
+        print(json.dumps(payload.to_dict(), indent=2, default=_json_default))
+        return 0
+
+    if args.command == "fiscal-contract-report":
+        payload = generate_fiscal_contract_report(args.path)
         print(json.dumps(payload.to_dict(), indent=2, default=_json_default))
         return 0
 

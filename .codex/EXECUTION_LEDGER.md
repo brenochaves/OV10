@@ -20,6 +20,7 @@ Purpose:
 - `TASK-121`: repository checkpoint and remote-sync governance
 - `TASK-122`: local Git sync audit automation and scheduled Windows reminder path
 - `TASK-113`: persisted market/FX consumption inside valuation-aware reconciliation
+- `TASK-105`: first DARF/DIRPF contracts and fiscal coverage reporting
 - current governed stack is implemented and validated for:
   - Python: `ruff`, `pytest`, `pyright`, `compileall`
   - Apps Script: `eslint`
