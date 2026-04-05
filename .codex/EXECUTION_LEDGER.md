@@ -1,6 +1,6 @@
 # Execution Ledger
 
-Date: 2026-03-21
+Date: 2026-04-05
 
 Purpose:
 
@@ -19,6 +19,7 @@ Purpose:
 - `TASK-120`: `pre-commit` orchestration
 - `TASK-121`: repository checkpoint and remote-sync governance
 - `TASK-122`: local Git sync audit automation and scheduled Windows reminder path
+- `TASK-113`: persisted market/FX consumption inside valuation-aware reconciliation
 - current governed stack is implemented and validated for:
   - Python: `ruff`, `pytest`, `pyright`, `compileall`
   - Apps Script: `eslint`

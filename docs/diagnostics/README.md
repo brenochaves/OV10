@@ -25,6 +25,7 @@ This folder stores the Phase 0-A deliverables required by the handoff:
 - `2026-03-19_market_data_strategy.md`
 - `2026-03-19_instrument_reference_layer.md`
 - `2026-03-21_market_fx_snapshot_layer.md`
+- `2026-04-05_market_fx_valuation_reconciliation.md`
 
 Related operational doc:
 
@@ -52,3 +53,4 @@ External evidence:
 - The reference Apps Script clone appears to be a thin loader/wrapper. Core business logic seems to be fetched remotely at runtime, not fully stored in the cloned project.
 - The remote payload for workbook version `v6.4.02` was captured successfully as `v61_controle_64` and cataloged into domain-oriented function groups.
 - A governed reference workbook reconciliation harness was added on 2026-03-19 to classify parity gaps for `portfolio.`, `caixa`, `alocação`, and `rendimentos`.
+- On 2026-04-05 the reconciliation harness was extended to consume persisted market and FX snapshots when `--database` is supplied, so market-driven fields now degrade by real coverage instead of static placeholders.

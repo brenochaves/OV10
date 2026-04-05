@@ -1089,6 +1089,58 @@ class SQLiteOV10Store:
             "snapshots": snapshots,
         }
 
+    def fetch_latest_market_snapshots(
+        self,
+        *,
+        canonical_codes: list[str] | tuple[str, ...],
+        as_of_date: date | None = None,
+        provider_name: str | None = None,
+    ) -> dict[str, dict[str, object]]:
+        normalized_codes = sorted(
+            {item.strip().upper() for item in canonical_codes if item.strip()}
+        )
+        if not normalized_codes:
+            return {}
+
+        placeholders = ", ".join("?" for _ in normalized_codes)
+        parameters: list[str] = list(normalized_codes)
+        where_clauses = [f"canonical_code IN ({placeholders})"]
+        if as_of_date is not None:
+            where_clauses.append("snapshot_date <= ?")
+            parameters.append(as_of_date.isoformat())
+        if provider_name is not None:
+            where_clauses.append("provider_name = ?")
+            parameters.append(provider_name.strip())
+
+        sql = """
+            SELECT
+                provider_name,
+                canonical_code,
+                source_symbol,
+                snapshot_date,
+                observed_at,
+                retrieved_at,
+                currency,
+                price,
+                previous_close,
+                absolute_change,
+                percent_change,
+                market,
+                quote_status,
+                provider_metadata_json
+            FROM market_snapshot
+            WHERE
+        """
+        sql += " AND ".join(where_clauses)
+        sql += " ORDER BY canonical_code, snapshot_date DESC, observed_at DESC, provider_name"
+
+        rows = self.connection.execute(sql, parameters).fetchall()
+        payload: dict[str, dict[str, object]] = {}
+        for row in rows:
+            item = _deserialize_market_snapshot_row(row)
+            payload.setdefault(str(item["canonical_code"]), item)
+        return payload
+
     def fetch_fx_snapshot_report(
         self,
         *,
@@ -1152,6 +1204,62 @@ class SQLiteOV10Store:
             "latest_snapshots": list(latest_by_pair.values()),
             "snapshots": snapshots,
         }
+
+    def fetch_latest_fx_snapshots(
+        self,
+        *,
+        currencies: list[str] | tuple[str, ...],
+        as_of_date: date | None = None,
+        provider_name: str | None = None,
+    ) -> dict[tuple[str, str], dict[str, object]]:
+        normalized_currencies = sorted(
+            {item.strip().upper() for item in currencies if item.strip()}
+        )
+        if not normalized_currencies:
+            return {}
+
+        placeholders = ", ".join("?" for _ in normalized_currencies)
+        parameters: list[str] = list(normalized_currencies) + list(normalized_currencies)
+        where_clauses = [
+            f"(base_currency IN ({placeholders}) OR quote_currency IN ({placeholders}))"
+        ]
+        if as_of_date is not None:
+            where_clauses.append("snapshot_date <= ?")
+            parameters.append(as_of_date.isoformat())
+        if provider_name is not None:
+            where_clauses.append("provider_name = ?")
+            parameters.append(provider_name.strip())
+
+        sql = """
+            SELECT
+                provider_name,
+                base_currency,
+                quote_currency,
+                snapshot_date,
+                observed_at,
+                retrieved_at,
+                rate,
+                rate_kind,
+                bid,
+                ask,
+                bulletin_type,
+                provider_metadata_json
+            FROM fx_snapshot
+            WHERE
+        """
+        sql += " AND ".join(where_clauses)
+        sql += (
+            " ORDER BY base_currency, quote_currency, snapshot_date DESC, "
+            "observed_at DESC, provider_name"
+        )
+
+        rows = self.connection.execute(sql, parameters).fetchall()
+        payload: dict[tuple[str, str], dict[str, object]] = {}
+        for row in rows:
+            item = _deserialize_fx_snapshot_row(row)
+            pair = (str(item["base_currency"]), str(item["quote_currency"]))
+            payload.setdefault(pair, item)
+        return payload
 
     def count_rows(self, table_name: str, *, batch_id: str | None = None) -> int:
         if batch_id is None:

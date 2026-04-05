@@ -1,5 +1,5 @@
 mode: development
-current_focus: consume governed market and FX snapshots in valuation reconciliation
+current_focus: define first canonical tax output contracts aligned with darf and dirpf
 risk_posture: conservative
 release_pressure: unknown
 allow_broad_refactors: false
@@ -57,3 +57,8 @@ notes:
     the planned backlog are substantially complete; keep security findings
     visible, but do not let them preempt the current delivery path unless risk
     materially changes.
+  - >-
+    Persisted market and FX snapshots started feeding the reference workbook
+    reconciliation path on 2026-04-05; market-driven blockers in `portfolio.`
+    and `alocação` now reflect actual database coverage instead of placeholder
+    gaps.

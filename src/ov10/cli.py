@@ -256,6 +256,11 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=DEFAULT_CONFIG_PATH,
     )
+    reference_reconciliation_parser.add_argument(
+        "--database",
+        type=Path,
+        default=None,
+    )
 
     return parser
 
@@ -448,6 +453,7 @@ def main(argv: list[str] | None = None) -> int:
             args.path,
             reference_workbook_path=args.reference_workbook,
             config_path=args.config,
+            database_path=args.database,
         )
         print(json.dumps(payload.to_dict(), indent=2, default=_json_default))
         return 0

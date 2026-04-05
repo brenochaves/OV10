@@ -194,6 +194,12 @@ Run the governed reconciliation harness against the checked-in reference workboo
 .\.venv312\Scripts\python.exe -m ov10.cli reference-workbook-reconciliation data\OV10_base_2025.xlsx --reference-workbook "ov10_codex_handoff\Cópia de v6.4_Controle de Investimentos (Alpha).xlsx" --config config\ov10_portfolio.toml
 ```
 
+Run the same harness with persisted market/FX consumption enabled:
+
+```powershell
+.\.venv312\Scripts\python.exe -m ov10.cli reference-workbook-reconciliation data\OV10_base_2025.xlsx --reference-workbook "ov10_codex_handoff\Cópia de v6.4_Controle de Investimentos (Alpha).xlsx" --config config\ov10_portfolio.toml --database var\ov10.sqlite3
+```
+
 Generate one synthetic workbook for a named scenario:
 
 ```powershell
@@ -262,8 +268,17 @@ For the reference workbook reconciliation harness, the current fixture is expect
 Interpretation:
 
 - `rendimentos` already has strong conceptual parity from canonical dividend receipts
-- `portfolio.` and `alocação` are now primarily blocked by missing valuation consumption of the persisted market/FX layer
+- `portfolio.` and `alocação` now consume persisted market/FX snapshots when `--database` is provided; remaining blockers depend on actual local snapshot coverage plus still-missing workbook concepts
 - `caixa` is primarily blocked by missing manual cash classes such as initial balance, remittance/withdrawal, and credit/debit
+
+Operator note for market-aware reconciliation:
+
+1. persist the fixture or batch into SQLite
+2. refresh governed market/FX snapshots into the same database
+3. run `reference-workbook-reconciliation --database ...`
+
+If the database has no persisted market coverage for the open positions, the
+report will correctly keep those workbook fields as `blocking`.
 
 ## Market Snapshot Notes
 

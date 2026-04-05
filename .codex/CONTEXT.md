@@ -1,6 +1,6 @@
 # CONTEXT
 
-Date: 2026-03-21
+Date: 2026-04-05
 
 ## Current Repository State
 
@@ -27,6 +27,7 @@ Date: 2026-03-21
 - inspect persisted batches through the CLI
 - inspect canonical instrument identity through `instrument-reference-report`
 - refresh and inspect governed market and FX snapshots through dedicated CLI paths
+- consume persisted market and FX snapshots inside valuation-aware reference reconciliation when a database is supplied
 - run the governed quality stack locally and in CI, including type checking, config validation, SQL lint, dependency audit, and `pre-commit`
 - run a governed Git sync audit and scheduled reminder path for repository checkpoint hygiene
 
@@ -45,7 +46,7 @@ Date: 2026-03-21
 2. adopt the useful parts of `final_kit` as a control plane under `.codex/`
 3. keep autonomy grounded in real backlog items and validation evidence
 4. continue toward deeper parity after the first workbook-config adapter for `config.carteiras` and `config.books`
-5. consume governed market and FX snapshots inside valuation/reconciliation
+5. define first canonical tax output contracts aligned with `darf` and `dirpf`
 6. defer nonessential security hardening until after the planned functional MVP is cleanly delivered
 
 ## Current Limitations
@@ -56,7 +57,7 @@ Date: 2026-03-21
 - reconciliation is still import-focused, not yet full reference-output parity
 - fiscal outputs such as `darf` and `dirpf` are not implemented
 - bulk `brapi` refresh is not reliable without a configured token even though the adapter is implemented
-- market and FX snapshots are not yet consumed by the valuation/reconciliation layer
+- valuation-aware reconciliation now depends on actual snapshot coverage in the selected database; an empty or stale database will correctly keep market fields as blockers
 - dev-bridge and broader repo security hardening are intentionally deferred to a post-MVP phase unless the risk posture changes materially
 
 ## Current Risks
@@ -72,9 +73,9 @@ Date: 2026-03-21
 - PowerShell now resolves `code` through the VS Code CLI wrapper instead of `Code.exe`
 - repo-tracked workspace files now exist under `.vscode/` and `.editorconfig`
 - the intended OV10 interpreter for workspace execution is `.venv312`
-- validation on 2026-03-21: `C:\git\OV10\.venv312\Scripts\python.exe -m pytest -q` passed with `33 passed`
-- validation on 2026-03-21: `ruff check .` is green under the governed policy in `pyproject.toml`
-- validation on 2026-03-21: governed multi-stack static-analysis and dependency-audit commands are green locally
+- validation on 2026-04-05: `C:\git\OV10\.venv312\Scripts\python.exe -m pytest -q` passed with `39 passed`
+- validation on 2026-04-05: `ruff check .` is green under the governed policy in `pyproject.toml`
+- validation on 2026-04-05: `npm run typecheck:python` is green after adding valuation-aware market/FX reconciliation
 - GitHub Actions CI now validates installability, `ruff`, `pytest`, `.codex/scripts` compilation, CLI help, governed type/schema/SQL checks, and dependency-audit commands
 - the governed lint scope intentionally excludes legacy root-level scripts and `archive/`
 - repository sync governance was added on 2026-03-21 after diagnosing a one-commit repo with a large active untracked surface; see `docs/diagnostics/2026-03-21_repository_sync_audit.md`

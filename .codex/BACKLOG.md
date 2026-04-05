@@ -69,7 +69,7 @@ dependencies: TASK-104
 notes: Delivered on 2026-03-21 with canonical `market_snapshot` and `fx_snapshot` tables, a governed `brapi` quote adapter, a governed BCB PTAX adapter, separate refresh/report CLI paths, and explicit first-pass coverage classification. Bulk `brapi` refresh now supports optional bearer token through `--brapi-token` / `OV10_BRAPI_TOKEN`.
 
 ## TASK-113
-status: TODO
+status: DONE
 priority: P1
 type: valuation_reconciliation
 summary: Consume governed market and FX snapshots to reduce `portfolio.` and `alocação` blockers.
@@ -80,7 +80,7 @@ acceptance:
 - remaining parity gaps distinguish valuation logic from provider coverage limitations
 
 dependencies: TASK-103, TASK-112
-notes: The snapshot layer now exists. The next value comes from consuming it in valuation and reconciliation instead of keeping `price`, `market_cod`, and FX columns as explicit blockers.
+notes: Delivered on 2026-04-05 with an explicit market-valuation layer, latest-snapshot lookup helpers in SQLite, and reference-workbook reconciliation that degrades market-driven fields by real persisted coverage. Database-free runs remain deterministic; `--database` enables valuation-aware parity checks.
 
 ## TASK-114
 status: DONE

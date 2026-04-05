@@ -11,14 +11,20 @@ from openpyxl import load_workbook
 from ov10.allocation import assign_account_positions_to_books, assign_accounts_to_portfolios
 from ov10.cash import build_cash_ledger
 from ov10.config import load_portfolio_book_config
-from ov10.domain.models import CanonicalDividendReceipt
+from ov10.domain.models import BookPositionSnapshot, CanonicalDividendReceipt, PositionSnapshot
 from ov10.ingestion import load_status_invest_workbook
 from ov10.positions import compute_account_positions, compute_positions
+from ov10.reconciliation.market_valuation import (
+    MarketValuationContext,
+    build_market_valuation_context,
+)
+from ov10.storage import SQLiteOV10Store
 
 DEFAULT_REFERENCE_WORKBOOK_PATH = (
     Path("ov10_codex_handoff") / "Cópia de v6.4_Controle de Investimentos (Alpha).xlsx"
 )
 DEFAULT_CONFIG_PATH = Path("config/ov10_portfolio.toml")
+DEFAULT_DATABASE_PATH = Path("var/ov10.sqlite3")
 
 
 class _CellLike(Protocol):
@@ -114,6 +120,7 @@ class _RuntimeContext:
     last_snapshot_date: date | None
     dividend_receipts: tuple[CanonicalDividendReceipt, ...]
     book_ids: tuple[str, ...]
+    market_valuation: MarketValuationContext
 
 
 def generate_reference_workbook_reconciliation(
@@ -121,11 +128,16 @@ def generate_reference_workbook_reconciliation(
     *,
     reference_workbook_path: str | Path = DEFAULT_REFERENCE_WORKBOOK_PATH,
     config_path: str | Path = DEFAULT_CONFIG_PATH,
+    database_path: str | Path | None = None,
 ) -> ReferenceWorkbookReconciliationReport:
     source_workbook_path = Path(source_workbook_path)
     reference_workbook_path = Path(reference_workbook_path)
     config_path = Path(config_path)
-    context = _build_runtime_context(source_workbook_path, config_path=config_path)
+    context = _build_runtime_context(
+        source_workbook_path,
+        config_path=config_path,
+        database_path=None if database_path is None else Path(database_path),
+    )
 
     workbook_formula = load_workbook(reference_workbook_path, data_only=False, read_only=True)
     workbook_values = load_workbook(reference_workbook_path, data_only=True, read_only=True)
@@ -165,6 +177,7 @@ def _build_runtime_context(
     source_workbook_path: Path,
     *,
     config_path: Path,
+    database_path: Path | None,
 ) -> _RuntimeContext:
     bundle = load_status_invest_workbook(source_workbook_path)
     cash_ledger = build_cash_ledger(bundle)
@@ -195,6 +208,12 @@ def _build_runtime_context(
         (item.snapshot_date for item in positions),
         default=None,
     )
+    market_valuation = _load_market_valuation(
+        positions=positions,
+        book_positions=book_positions,
+        database_path=database_path,
+        snapshot_date=last_snapshot_date,
+    )
     return _RuntimeContext(
         batch_id=bundle.batch.batch_id,
         transaction_count=len(bundle.transactions),
@@ -208,6 +227,7 @@ def _build_runtime_context(
         last_snapshot_date=last_snapshot_date,
         dividend_receipts=bundle.dividend_receipts,
         book_ids=tuple(sorted({item.book_id for item in book_positions})),
+        market_valuation=market_valuation,
     )
 
 
@@ -228,19 +248,34 @@ def _build_portfolio_area(
             "position_snapshots.instrument_code",
             "O codigo do ativo ja existe no snapshot canonico.",
         ),
-        "market_cod": _gap(
+        "market_cod": _coverage_gap(
             "market_cod",
-            "missing",
-            "blocking",
-            "",
-            "Depende da camada governada de referencia de mercado do TASK-104.",
+            matched_count=context.market_valuation.positions_with_market_code,
+            total_count=context.market_valuation.position_count,
+            current_source="latest market_snapshot.market",
+            matched_note=(
+                "O codigo de mercado ja pode ser lido do snapshot persistido mais recente."
+            ),
+            partial_note=(
+                "Existe cobertura parcial de codigo de mercado a partir dos snapshots persistidos."
+            ),
+            missing_note=(
+                "Nenhum snapshot persistido com mercado resolvido foi encontrado para "
+                "as posicoes abertas."
+            ),
         ),
-        "nome_pregao": _gap(
+        "nome_pregao": _coverage_gap(
             "nome_pregao",
-            "missing",
-            "blocking",
-            "",
-            "Depende de metadata externa de instrumento.",
+            matched_count=context.market_valuation.positions_with_display_name,
+            total_count=context.market_valuation.position_count,
+            current_source="latest market_snapshot.provider_metadata.longName",
+            matched_note=("O nome de pregão ja pode ser lido da metadata persistida do provider."),
+            partial_note=(
+                "Existe cobertura parcial de nome de pregão a partir da metadata persistida."
+            ),
+            missing_note=(
+                "Nenhum nome de pregão persistido foi encontrado para as posicoes abertas."
+            ),
         ),
         "classe": _gap(
             "classe",
@@ -304,12 +339,20 @@ def _build_portfolio_area(
             "position_snapshots.avg_cost",
             "Preco medio atual ja existe nos snapshots canonicos.",
         ),
-        "pm_fx": _gap(
+        "pm_fx": _coverage_gap(
             "pm_fx",
-            "missing",
-            "blocking",
-            "",
-            "Nao existe saida de preco medio em moeda de negociacao.",
+            matched_count=context.market_valuation.positions_with_avg_cost_in_price_currency,
+            total_count=context.market_valuation.position_count,
+            current_source="position_snapshots.avg_cost + latest fx_snapshot",
+            matched_note=(
+                "O preco medio em moeda da cotacao ja pode ser derivado da camada persistida."
+            ),
+            partial_note=(
+                "Existe cobertura parcial de traducao do preco medio para a moeda de cotacao."
+            ),
+            missing_note=(
+                "Nenhuma traducao persistida de preco medio para moeda de cotacao foi encontrada."
+            ),
         ),
         "pm_ptax": _gap(
             "pm_ptax",
@@ -332,33 +375,64 @@ def _build_portfolio_area(
             "position_snapshots.total_cost",
             "Valor investido ja existe como custo total nos snapshots.",
         ),
-        "price": _gap(
+        "price": _coverage_gap(
             "price",
-            "missing",
-            "blocking",
-            "",
-            "Preco de mercado depende da camada de referencia de mercado do TASK-104.",
+            matched_count=context.market_valuation.positions_with_market_price,
+            total_count=context.market_valuation.position_count,
+            current_source="latest market_snapshot.price",
+            matched_note=(
+                "O preco de mercado ja pode ser lido do snapshot persistido mais recente."
+            ),
+            partial_note=(
+                "Existe cobertura parcial de preco de mercado a partir dos snapshots persistidos."
+            ),
+            missing_note=(
+                "Nenhum preco de mercado persistido foi encontrado para as posicoes abertas."
+            ),
         ),
-        "change": _gap(
+        "change": _coverage_gap(
             "change",
-            "missing",
-            "blocking",
-            "",
-            "Variacao absoluta depende de preco de mercado.",
+            matched_count=context.market_valuation.positions_with_change,
+            total_count=context.market_valuation.position_count,
+            current_source="latest market_snapshot.absolute_change",
+            matched_note=(
+                "A variacao absoluta ja pode ser lida do snapshot persistido mais recente."
+            ),
+            partial_note=(
+                "Existe cobertura parcial de variacao absoluta a partir dos snapshots persistidos."
+            ),
+            missing_note=(
+                "Nenhuma variacao absoluta persistida foi encontrada para as posicoes abertas."
+            ),
         ),
-        "changepct": _gap(
+        "changepct": _coverage_gap(
             "changepct",
-            "missing",
-            "blocking",
-            "",
-            "Variacao percentual depende de preco de mercado.",
+            matched_count=context.market_valuation.positions_with_change_pct,
+            total_count=context.market_valuation.position_count,
+            current_source="latest market_snapshot.percent_change",
+            matched_note=(
+                "A variacao percentual ja pode ser lida do snapshot persistido mais recente."
+            ),
+            partial_note=(
+                "Existe cobertura parcial de variacao percentual a partir dos snapshots "
+                "persistidos."
+            ),
+            missing_note=(
+                "Nenhuma variacao percentual persistida foi encontrada para as posicoes abertas."
+            ),
         ),
-        "moeda_price": _gap(
+        "moeda_price": _coverage_gap(
             "moeda_price",
-            "partial",
-            "explained",
-            "position_snapshots.currency",
-            "A moeda do custo existe, mas nao a moeda da cotacao de mercado.",
+            matched_count=context.market_valuation.positions_with_price_currency,
+            total_count=context.market_valuation.position_count,
+            current_source="latest market_snapshot.currency",
+            matched_note="A moeda da cotacao ja existe no snapshot persistido de mercado.",
+            partial_note=(
+                "Existe cobertura parcial de moeda da cotacao a partir dos snapshots persistidos."
+            ),
+            missing_note=(
+                "Nenhuma moeda de cotacao persistida foi encontrada para as posicoes abertas."
+            ),
         ),
         "corretora_investidor": _gap(
             "corretora_investidor",
@@ -418,6 +492,12 @@ def _build_portfolio_area(
         "account_position_snapshots": context.account_snapshot_count,
         "resolved_book_ids": list(context.book_ids),
         "last_snapshot_date": context.last_snapshot_date,
+        "positions_with_market_price": context.market_valuation.positions_with_market_price,
+        "positions_with_display_name": context.market_valuation.positions_with_display_name,
+        "positions_with_market_code": context.market_valuation.positions_with_market_code,
+        "positions_with_avg_cost_in_price_currency": (
+            context.market_valuation.positions_with_avg_cost_in_price_currency
+        ),
     }
     return _build_area(
         area_id="portfolio_backend",
@@ -601,22 +681,28 @@ def _build_allocation_area(
             "",
             "Nao existe calculo de ajuste monetario por book.",
         ),
-        "%": _gap(
+        "%": _coverage_gap(
             "%",
-            "partial",
-            "explained",
-            "book_registry.target_weight",
-            (
-                "Existe o objetivo percentual, "
-                "mas nao a percentagem corrente reconciliada por valor de mercado."
+            matched_count=context.market_valuation.books_with_current_weight,
+            total_count=context.market_valuation.book_count,
+            current_source="book_position_snapshots + latest market_snapshot/fx_snapshot",
+            matched_note=(
+                "A percentagem corrente ja pode ser derivada do valor de mercado "
+                "persistido por book."
+            ),
+            partial_note="Existe cobertura parcial de percentagem corrente por valor de mercado.",
+            missing_note=(
+                "Nao existe cobertura persistida suficiente para percentagem corrente por book."
             ),
         ),
-        "VALOR DE MERCADO": _gap(
+        "VALOR DE MERCADO": _coverage_gap(
             "VALOR DE MERCADO",
-            "missing",
-            "blocking",
-            "",
-            "Depende da camada de mercado e precificacao do TASK-104.",
+            matched_count=context.market_valuation.valued_book_count,
+            total_count=context.market_valuation.book_count,
+            current_source="book_position_snapshots + latest market_snapshot/fx_snapshot",
+            matched_note="O valor de mercado por book ja pode ser agregado da camada persistida.",
+            partial_note="Existe cobertura parcial de valor de mercado por book.",
+            missing_note="Nao existe cobertura persistida de valor de mercado por book.",
         ),
         "VALOR INVESTIDO": _gap(
             "VALOR INVESTIDO",
@@ -632,12 +718,14 @@ def _build_allocation_area(
             "",
             "Nao existe saida de caixa FX integrada ao book dashboard.",
         ),
-        "LUCRO TOTAL": _gap(
+        "LUCRO TOTAL": _coverage_gap(
             "LUCRO TOTAL",
-            "missing",
-            "blocking",
-            "",
-            "Lucro total por book depende de valor de mercado.",
+            matched_count=context.market_valuation.books_with_profit_total,
+            total_count=context.market_valuation.book_count,
+            current_source="book_position_snapshots + latest market_snapshot/fx_snapshot",
+            matched_note="O lucro total por book ja pode ser derivado da camada persistida.",
+            partial_note="Existe cobertura parcial de lucro total por book.",
+            missing_note="Nao existe cobertura persistida de lucro total por book.",
         ),
     }
     gaps = tuple(support[item] for item in normalized_headers if item in support)
@@ -650,6 +738,12 @@ def _build_allocation_area(
         "reference_headers": normalized_headers,
         "book_snapshot_count": context.book_snapshot_count,
         "book_ids": list(context.book_ids),
+        "valued_book_count": context.market_valuation.valued_book_count,
+        "books_with_profit_total": context.market_valuation.books_with_profit_total,
+        "books_with_current_weight": context.market_valuation.books_with_current_weight,
+        "total_market_value_in_base_currency": (
+            context.market_valuation.total_market_value_in_base_currency
+        ),
     }
     return _build_area(
         area_id="allocation_dashboard",
@@ -817,6 +911,70 @@ def _build_area(
         gaps=gaps,
         metrics=metrics_with_counts,
     )
+
+
+def _load_market_valuation(
+    *,
+    positions: list[PositionSnapshot],
+    book_positions: list[BookPositionSnapshot],
+    database_path: Path | None,
+    snapshot_date: date | None,
+) -> MarketValuationContext:
+    if database_path is None or not database_path.exists() or not positions:
+        return build_market_valuation_context(
+            positions=positions,
+            book_positions=book_positions,
+            market_snapshots_by_code={},
+            fx_snapshots_by_pair={},
+        )
+
+    with SQLiteOV10Store(database_path) as store:
+        store.initialize()
+        market_snapshots = store.fetch_latest_market_snapshots(
+            canonical_codes=[item.instrument_code for item in positions],
+            as_of_date=snapshot_date,
+        )
+        currencies = {item.currency for item in positions} | {
+            str(snapshot.get("currency"))
+            for snapshot in market_snapshots.values()
+            if snapshot.get("currency")
+        }
+        fx_snapshots = store.fetch_latest_fx_snapshots(
+            currencies=tuple(sorted(currencies)),
+            as_of_date=snapshot_date,
+        )
+
+    return build_market_valuation_context(
+        positions=positions,
+        book_positions=book_positions,
+        market_snapshots_by_code=market_snapshots,
+        fx_snapshots_by_pair=fx_snapshots,
+    )
+
+
+def _coverage_gap(
+    reference_field: str,
+    *,
+    matched_count: int,
+    total_count: int,
+    current_source: str,
+    matched_note: str,
+    partial_note: str,
+    missing_note: str,
+) -> ReferenceGap:
+    if total_count <= 0:
+        return _gap(reference_field, "missing", "blocking", "", missing_note)
+    if matched_count >= total_count:
+        return _gap(reference_field, "matched", "expected", current_source, matched_note)
+    if matched_count > 0:
+        return _gap(
+            reference_field,
+            "partial",
+            "explained",
+            current_source,
+            f"{partial_note} Cobertura observada: {matched_count}/{total_count}.",
+        )
+    return _gap(reference_field, "missing", "blocking", "", missing_note)
 
 
 def _gap(
